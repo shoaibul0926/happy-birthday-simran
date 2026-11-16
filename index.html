@@ -146,6 +146,82 @@
     color: #f4f0ff;
   }
 
+  .gift-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 28px 0;
+    cursor: pointer;
+  }
+
+  .gift-box {
+    position: relative;
+    width: 130px;
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    box-shadow: 0 12px 28px rgba(123, 92, 255, 0.4);
+    animation: wiggle 2.2s ease-in-out infinite;
+  }
+  .gift-box::before,
+  .gift-box::after {
+    content: "";
+    position: absolute;
+    background: var(--gold);
+  }
+  .gift-box::before {
+    width: 100%;
+    height: 18px;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+  }
+  .gift-box::after {
+    width: 18px;
+    height: 100%;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+  }
+  .gift-box span {
+    position: relative;
+    z-index: 1;
+  }
+  .gift-box.opening {
+    animation: popOpen 0.55s ease forwards;
+  }
+
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(-4deg); }
+    50% { transform: rotate(4deg); }
+  }
+  @keyframes popOpen {
+    0%   { transform: scale(1) rotate(0deg); opacity: 1; }
+    40%  { transform: scale(1.25) rotate(-10deg); opacity: 1; }
+    100% { transform: scale(0.1) rotate(25deg); opacity: 0; }
+  }
+
+  .gift-hint {
+    font-size: 0.9rem;
+    color: #e3d9ff;
+    opacity: 0.85;
+  }
+
+  .message {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .message.visible {
+    display: block;
+    opacity: 1;
+  }
+
   .back-btn {
     margin-top: 18px;
     background: none;
@@ -184,6 +260,11 @@
 
   <div class="card" id="note-card">
     <h2>A Note For You</h2>
+    <div class="gift-wrap" id="note-gift" onclick="unwrapGift('note')">
+      <div class="gift-box"><span>🎁</span></div>
+      <p class="gift-hint">Tap to unwrap</p>
+    </div>
+    <div class="message" id="note-message">
     <p id="note-text">HAPPIEST BIRTHDAY, SIMRAN! ❤️🥹🫂
 
 It's been more than a year since we got connected, and honestly, when I look back, it feels so beautiful to see how far we've come while still being exactly the same. More than a year of conversations, countless little moments, random discussions, laughter, sharing thoughts and being there for each other, yet the equation we share hasn't changed. The comfort, the understanding, the craziness and the affection are still the same. You know, sometimes it's not about how many years you've known someone; it's about how naturally that person becomes a part of your life. And that's exactly what happened with us. I never imagined that a connection that started more than a year ago would become such a beautiful and important part of my life. I'm genuinely happy that despite the time passing, we haven't lost that initial spark or the comfort we share. I hope that even after many years, we look back at this journey and smile, knowing that we have managed to keep this bond just as beautiful as it is today. ❤️
@@ -201,11 +282,17 @@ And finally, HAPPY BIRTHDAY ONCE AGAIN, SIMRAN! ❤️🥹 I hope you have the m
 With lots of love,
 Your Chotu Bhai,
 ~ SHOAIB ❤️🫂</p>
+    </div>
     <button class="back-btn" onclick="hideCards()">← Back</button>
   </div>
 
   <div class="card" id="shayri-card">
     <h2>A Shayri For You</h2>
+    <div class="gift-wrap" id="shayri-gift" onclick="unwrapGift('shayri')">
+      <div class="gift-box"><span>🎁</span></div>
+      <p class="gift-hint">Tap to unwrap</p>
+    </div>
+    <div class="message" id="shayri-message">
     <p id="shayri-text">Kuch rishte alfaazon se nahi, ehsaason se pehchaane jaate hain,
 Kuch log zindagi mein aakar apne ban jaate hain... ❤️
 
@@ -328,6 +415,7 @@ Tere jaisi behen mili, toh laga jaise duaon ka sila mila...
 With lots of love, duas and respect,
 Your Chotu Bhai,
 ~ SHOAIB ❤️🫂</p>
+    </div>
     <button class="back-btn" onclick="hideCards()">← Back</button>
   </div>
 </main>
@@ -337,9 +425,24 @@ Your Chotu Bhai,
 <script>
   function showCard(which) {
     document.getElementById('choices').style.display = 'none';
-    document.getElementById('note-card').classList.remove('visible');
-    document.getElementById('shayri-card').classList.remove('visible');
+    ['note', 'shayri'].forEach(function (key) {
+      document.getElementById(key + '-card').classList.remove('visible');
+      var gift = document.getElementById(key + '-gift');
+      gift.style.display = 'flex';
+      gift.classList.remove('opening');
+      document.getElementById(key + '-message').classList.remove('visible');
+    });
     document.getElementById(which + '-card').classList.add('visible');
+  }
+
+  function unwrapGift(which) {
+    var gift = document.getElementById(which + '-gift');
+    var message = document.getElementById(which + '-message');
+    gift.classList.add('opening');
+    setTimeout(function () {
+      gift.style.display = 'none';
+      message.classList.add('visible');
+    }, 550);
   }
 
   function hideCards() {

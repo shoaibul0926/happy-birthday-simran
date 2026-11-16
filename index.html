@@ -488,7 +488,7 @@ Your Chotu Bhai,
       document.getElementById(key + '-card').classList.remove('visible');
       var gift = document.getElementById(key + '-gift');
       gift.style.display = 'flex';
-      gift.classList.remove('opening');
+      gift.querySelector('.gift-box').classList.remove('opening');
       document.getElementById(key + '-message').classList.remove('visible');
     });
     document.getElementById(which + '-card').classList.add('visible');
@@ -497,7 +497,7 @@ Your Chotu Bhai,
   function unwrapGift(which) {
     var gift = document.getElementById(which + '-gift');
     var message = document.getElementById(which + '-message');
-    gift.classList.add('opening');
+    gift.querySelector('.gift-box').classList.add('opening');
     setTimeout(function () {
       gift.style.display = 'none';
       message.classList.add('visible');
